@@ -322,6 +322,9 @@ The following files are included in the repository for full reproducibility:
 | `models/production/model_metadata.json` | Model version, hyperparameters, performance metrics |
 | `models/production/feature_names.json` | List of 19 feature names used by the model |
 | `models/production/MODEL_CARD.md` | Model documentation and ethical considerations |
+| `mlruns/` | MLflow experiment tracking data (parameters, metrics, artifacts) |
+| `requirements.txt` | All Python dependencies with pinned versions |
+| `src/features/feature_engineering.py` | Feature creation and preprocessing pipeline |
 
 ### Preprocessing Pipeline
 
