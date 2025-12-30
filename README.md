@@ -54,6 +54,7 @@ open http://localhost:8000/docs
 - [Project Structure](#-project-structure)
 - [Detailed Execution Steps](#-detailed-execution-steps)
 - [Data Acquisition](#-data-acquisition)
+- [Model Packaging & Reproducibility](#-model-packaging--reproducibility)
 - [Model Training](#-model-training)
 - [API Usage](#-api-usage)
 - [Docker Deployment](#-docker-deployment)
@@ -305,6 +306,56 @@ This script will:
 | ca | Number of major vessels (0-3) | Numerical |
 | thal | Thalassemia type | Categorical |
 | target | Heart disease presence (0/1) | Binary |
+
+---
+
+## 📦 Model Packaging & Reproducibility
+
+### Saved Model Artifacts
+
+The following files are included in the repository for full reproducibility:
+
+| File | Description |
+|------|-------------|
+| `models/production/model.pkl` | Trained RandomForestClassifier (pickle format) |
+| `models/production/preprocessor.pkl` | ColumnTransformer for feature preprocessing |
+| `models/production/model_metadata.json` | Model version, hyperparameters, performance metrics |
+| `models/production/feature_names.json` | List of 19 feature names used by the model |
+| `models/production/MODEL_CARD.md` | Model documentation and ethical considerations |
+
+### Preprocessing Pipeline
+
+The preprocessing pipeline (`src/features/feature_engineering.py`) includes:
+
+```python
+# Feature Engineering
+create_features(df)  # Creates: age_group, chol_cat, bp_cat, hr_reserve, interaction features
+
+# Preprocessing Pipeline
+build_preprocessing_pipeline(numerical_features, categorical_features)
+# - Numerical: SimpleImputer(median) + StandardScaler
+# - Categorical: SimpleImputer(most_frequent) + OneHotEncoder
+```
+
+### Reproducibility
+
+- **Random Seed**: 42 (fixed for all training)
+- **Python Version**: 3.10+
+- **scikit-learn Version**: 1.3.0
+- **All dependencies pinned** in `requirements.txt`
+
+### Load Model for Inference
+
+```python
+import joblib
+
+# Load model and preprocessor
+model = joblib.load('models/production/model.pkl')
+preprocessor = joblib.load('models/production/preprocessor.pkl')
+
+# Make prediction
+prediction = model.predict(preprocessed_data)
+```
 
 ---
 

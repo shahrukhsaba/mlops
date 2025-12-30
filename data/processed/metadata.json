@@ -2,7 +2,7 @@
   "dataset_name": "Heart Disease UCI",
   "source": "UCI Machine Learning Repository",
   "url": "https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data",
-  "download_date": "2025-12-31T02:46:07.195293",
+  "download_date": "2025-12-31T03:25:47.358267",
   "n_samples": 297,
   "n_features": 13,
   "target_distribution": {
