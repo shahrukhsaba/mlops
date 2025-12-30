@@ -1,27 +1,64 @@
 # Heart Disease Prediction - MLOps Assignment
 
-[![CI/CD Pipeline](https://github.com/YOUR_USERNAME/heart-disease-mlops/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/YOUR_USERNAME/heart-disease-mlops/actions)
+[![CI/CD Pipeline](https://github.com/shahrukhsaba/mlops/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/shahrukhsaba/mlops/actions)
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+**BITS Pilani - MLOps Assignment (S1-25_AIMLCZG523)**
+
 A production-ready MLOps pipeline for predicting heart disease risk using the UCI Heart Disease dataset. This project demonstrates end-to-end ML model development, CI/CD, containerization, and cloud deployment.
+
+---
+
+## 🚀 Quick Start - Run the Complete Project
+
+```bash
+# Step 1: Clone and navigate to the project
+git clone https://github.com/shahrukhsaba/mlops.git
+cd mlops
+
+# Step 2: Install dependencies
+pip install -r requirements.txt
+
+# Step 3: Download and prepare data
+python scripts/download_data.py
+
+# Step 4: Train the model
+python scripts/train_and_save_locally.py
+
+# Step 5: Build Docker image
+docker build -t heart-disease-api:latest .
+
+# Step 6: Run Docker container
+docker run -d --name heart-disease-api -p 8000:8000 heart-disease-api:latest
+
+# Step 7: Test the API
+curl http://localhost:8000/health
+curl -X POST "http://localhost:8000/predict?age=63&sex=1&cp=3&trestbps=145&chol=233&fbs=1&restecg=0&thalach=150&exang=0&oldpeak=2.3&slope=0&ca=0&thal=1"
+
+# Step 8: Open API documentation
+open http://localhost:8000/docs
+```
+
+---
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Setup Instructions](#setup-instructions)
-- [Data Acquisition](#data-acquisition)
-- [Model Training](#model-training)
-- [API Usage](#api-usage)
-- [Docker Deployment](#docker-deployment)
-- [Kubernetes Deployment](#kubernetes-deployment)
-- [CI/CD Pipeline](#cicd-pipeline)
-- [Monitoring](#monitoring)
-- [Testing](#testing)
-- [MLflow Experiment Tracking](#mlflow-experiment-tracking)
+- [Quick Start](#-quick-start---run-the-complete-project)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Project Structure](#-project-structure)
+- [Detailed Execution Steps](#-detailed-execution-steps)
+- [Data Acquisition](#-data-acquisition)
+- [Model Training](#-model-training)
+- [API Usage](#-api-usage)
+- [Docker Deployment](#-docker-deployment)
+- [Kubernetes Deployment](#-kubernetes-deployment)
+- [CI/CD Pipeline](#-cicd-pipeline)
+- [Monitoring](#-monitoring)
+- [Testing](#-testing)
+- [MLflow Experiment Tracking](#-mlflow-experiment-tracking)
 
 ---
 
@@ -106,32 +143,97 @@ heart-disease-mlops/
 
 ---
 
-## 🚀 Setup Instructions
+## 📝 Detailed Execution Steps
 
 ### Prerequisites
 
-- Python 3.10+
-- Docker (optional, for containerization)
-- Minikube/kubectl (optional, for Kubernetes)
+- Python 3.9+ or 3.10+
+- Docker Desktop (for containerization)
+- Git
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/heart-disease-mlops.git
-cd heart-disease-mlops
-```
-
-### 2. Create Virtual Environment
+### Step 1: Clone and Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/shahrukhsaba/mlops.git
+cd mlops
+
+# Create virtual environment (optional but recommended)
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-### 3. Install Dependencies
+### Step 2: Download Data
 
 ```bash
-pip install -r requirements.txt
+python scripts/download_data.py
+```
+
+**Expected Output:**
+```
+Dataset download and processing complete!
+Final dataset shape: (297, 14)
+Target distribution: {0: 160, 1: 137}
+```
+
+### Step 3: Train the Model
+
+```bash
+python scripts/train_and_save_locally.py
+```
+
+**Expected Output:**
+```
+Training Random Forest model for packaging...
+Model saved to models/random_forest/model.pkl
+```
+
+### Step 4: Build Docker Image
+
+```bash
+docker build -t heart-disease-api:latest .
+```
+
+### Step 5: Run Docker Container
+
+```bash
+docker run -d --name heart-disease-api -p 8000:8000 heart-disease-api:latest
+```
+
+### Step 6: Test the API
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Make a prediction
+curl -X POST "http://localhost:8000/predict?age=63&sex=1&cp=3&trestbps=145&chol=233&fbs=1&restecg=0&thalach=150&exang=0&oldpeak=2.3&slope=0&ca=0&thal=1"
+```
+
+**Expected Response:**
+```json
+{
+  "prediction": 0,
+  "confidence": 0.2737,
+  "risk_level": "Low",
+  "probability_no_disease": 0.7263,
+  "probability_disease": 0.2737,
+  "processing_time_ms": 17.38
+}
+```
+
+### Step 7: View API Documentation
+
+Open in browser: http://localhost:8000/docs
+
+### Step 8: Stop Container (when done)
+
+```bash
+docker stop heart-disease-api
+docker rm heart-disease-api
 ```
 
 ---
@@ -419,10 +521,12 @@ View and compare runs at http://localhost:5000.
 
 ## 📝 Model Performance
 
-| Model | Accuracy | ROC-AUC | CV Score |
-|-------|----------|---------|----------|
-| Logistic Regression | 0.82 | 0.88 | 0.85 ± 0.04 |
-| Random Forest | 0.85 | 0.92 | 0.88 ± 0.03 |
+| Model | Accuracy | Precision | Recall | F1-Score | ROC-AUC |
+|-------|----------|-----------|--------|----------|---------|
+| Logistic Regression | 80.00% | 83.33% | 71.43% | 76.92% | **92.86%** |
+| Random Forest | **81.67%** | 81.48% | **78.57%** | **80.00%** | 91.52% |
+
+*Note: Logistic Regression achieved higher ROC-AUC while Random Forest had better overall accuracy.*
 
 ---
 

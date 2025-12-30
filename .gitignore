@@ -45,13 +45,14 @@ coverage.xml
 *.cover
 test-results.xml
 
-# MLflow (keep for experiment tracking)
-# mlruns/
+# MLflow
+mlruns/
 
 # Environment
 .env
 .env.local
 .env.*.local
+environment_snapshot.json
 
 # Prefect
 .prefect/
@@ -60,15 +61,24 @@ test-results.xml
 logs/
 *.log
 
-# Data (keep processed for reproducibility)
+# Data
 data/raw/*.csv
+data/processed.cleveland.data
 !data/raw/heart_disease_raw.csv
 !data/processed/
 
-# Models (keep production artifacts)
+# Models (keep production model.pkl and preprocessor.pkl only)
 models/archived/
 models/mlflow_models/
-!models/production/
+models/*.pkl
+models/production/*.pickle
+models/production/full_pipeline.pkl
+models/random_forest/
+!models/production/model.pkl
+!models/production/preprocessor.pkl
+!models/production/model_metadata.json
+!models/production/feature_names.json
+!models/production/MODEL_CARD.md
 
 # Docker
 *.tar.gz
@@ -86,3 +96,6 @@ Thumbs.db
 *.pem
 *.key
 secrets/
+
+# Duplicate folders
+app/
