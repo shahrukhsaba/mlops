@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/skshahrukh.saba/Downloads/MLOps_assignment/mlruns/680181268706262372/90e876afda0a4569af3720ca1ab789af/artifacts
+end_time: 1767136670279
+entry_point_name: ''
+experiment_id: '680181268706262372'
+lifecycle_stage: active
+run_id: 90e876afda0a4569af3720ca1ab789af
+run_name: LogisticRegression_Experiment
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1767136668028
+status: 3
+tags: []
+user_id: skshahrukh.saba

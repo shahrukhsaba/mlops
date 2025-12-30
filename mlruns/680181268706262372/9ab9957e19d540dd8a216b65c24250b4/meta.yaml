@@ -1,0 +1,14 @@
+artifact_uri: file:///Users/skshahrukh.saba/Downloads/MLOps_assignment/mlruns/680181268706262372/9ab9957e19d540dd8a216b65c24250b4/artifacts
+end_time: 1767136672467
+entry_point_name: ''
+experiment_id: '680181268706262372'
+lifecycle_stage: active
+run_id: 9ab9957e19d540dd8a216b65c24250b4
+run_name: RandomForest_Experiment
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1767136670290
+status: 3
+tags: []
+user_id: skshahrukh.saba

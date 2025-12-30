@@ -1,0 +1,10 @@
+artifact_location: file:///Users/skshahrukh.saba/Downloads/MLOps_assignment/mlruns/680181268706262372/models/m-6d4fc58df939457bad072102979ed876/artifacts
+creation_timestamp: 1767136668208
+experiment_id: '680181268706262372'
+last_updated_timestamp: 1767136670276
+model_id: m-6d4fc58df939457bad072102979ed876
+model_type: null
+name: model
+source_run_id: 90e876afda0a4569af3720ca1ab789af
+status: 2
+status_message: null

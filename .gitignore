@@ -45,8 +45,8 @@ coverage.xml
 *.cover
 test-results.xml
 
-# MLflow
-mlruns/
+# MLflow - track experiment runs for reproducibility
+# mlruns/ is now tracked for assignment submission
 
 # Environment
 .env
