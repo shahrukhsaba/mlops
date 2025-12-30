@@ -508,20 +508,24 @@ kubectl logs -l app=heart-disease-api
 
 The GitHub Actions workflow (`.github/workflows/ci-cd.yml`) includes:
 
-1. **Lint**: Code quality checks with flake8, black, isort
-2. **Test**: Unit tests with pytest and coverage
-3. **Train**: Model training and artifact generation
-4. **Docker**: Build and test Docker image
-5. **Integration**: API integration tests
-6. **Security**: Bandit and safety vulnerability scans
+| Job | Description | Artifacts |
+|-----|-------------|-----------|
+| **lint** | flake8, black, isort code quality | - |
+| **test** | pytest with coverage | Coverage reports (XML, HTML) |
+| **train** | Model training & validation | Model artifacts, MLflow runs |
+| **docker** | Build & test Docker image | Docker image (.tar.gz) |
+| **integration** | API integration tests | Test results |
+| **security** | bandit, safety scans | Security reports |
 
 ### Trigger Pipeline
 
-Push to `main` or `develop` branch, or open a pull request.
+- Push to `main`, `master`, or `develop` branch
+- Pull request to `main` or `master`
+- Manual trigger via `workflow_dispatch`
 
 ### View Results
 
-Check the Actions tab in your GitHub repository.
+Check the [Actions tab](https://github.com/shahrukhsaba/mlops/actions) in the GitHub repository.
 
 ---
 
@@ -555,6 +559,18 @@ API logs are written to `logs/api.log`.
 ---
 
 ## 🧪 Testing
+
+### Test Coverage
+
+| Test File | Tests | Description |
+|-----------|-------|-------------|
+| `tests/unit/test_data_processing.py` | 15 | Data loading, validation, transformations |
+| `tests/unit/test_model.py` | 12 | Predictions, metrics, risk classification |
+| `tests/unit/test_preprocessing.py` | 11 | Feature engineering, preprocessing |
+| `tests/unit/test_api.py` | - | API endpoint tests |
+| `tests/integration/test_api_integration.py` | - | Full API integration |
+
+**Total: 52+ tests**
 
 ### Run All Tests
 
