@@ -140,57 +140,74 @@ This project builds a machine learning classifier to predict heart disease risk 
 
 ---
 
+## 📚 Documentation
+
+| Document | Description |
+|----------|-------------|
+| 📖 **[API Documentation](docs/API.md)** | Complete API reference with all endpoints, parameters, examples |
+| 🚀 **[Deployment Guide](docs/DEPLOYMENT.md)** | Docker, Kubernetes, Cloud deployment instructions |
+| 📋 **[Quick Start Guide](QUICKSTART.md)** | Step-by-step setup and run instructions |
+| 📄 **[Assignment Report](reports/MLOps_Assignment_Report.md)** | Full 10-page assignment report |
+
+---
+
 ## 📁 Project Structure
 
 ```
-heart-disease-mlops/
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml              # GitHub Actions CI/CD pipeline
+mlops/
+├── .github/workflows/
+│   └── ci-cd.yml                  # GitHub Actions CI/CD pipeline
 ├── api/
-│   ├── app.py                     # FastAPI application
+│   ├── app.py                     # FastAPI application (main)
 │   ├── predictor.py               # Prediction logic
-│   ├── schemas.py                 # Pydantic schemas
-│   ├── middleware/                # API middleware
-│   └── monitoring/                # Prometheus metrics
+│   └── schemas.py                 # Pydantic request/response schemas
+├── configs/                        # Configuration files
 ├── data/
-│   ├── raw/                       # Raw data files
-│   └── processed/                 # Cleaned data
+│   ├── raw/                       # Raw downloaded data
+│   └── processed/                 # Cleaned & processed data
+├── docs/
+│   ├── API.md                     # API documentation
+│   └── DEPLOYMENT.md              # Deployment guide
 ├── k8s/
-│   ├── deployment.yaml            # Kubernetes deployment
-│   ├── configmap.yaml             # Configuration
+│   ├── deployment.yaml            # K8s Deployment + Service + HPA
+│   ├── configmap.yaml             # Application configuration
 │   ├── ingress.yaml               # Ingress rules
 │   └── namespace.yaml             # Namespace definition
-├── models/
-│   └── production/                # Production model artifacts
+├── models/production/              # Production model artifacts
+│   ├── model.pkl                  # Trained model
+│   ├── preprocessor.pkl           # Feature preprocessor
+│   └── model_metadata.json        # Model metadata
 ├── monitoring/
-│   ├── prometheus/                # Prometheus configuration
-│   └── grafana/                   # Grafana dashboards
+│   ├── docker-compose-monitoring.yml  # Full monitoring stack
+│   ├── prometheus/prometheus.yml      # Prometheus config
+│   └── grafana/dashboards/            # Grafana dashboard JSON
 ├── notebooks/
-│   ├── 01_eda.ipynb                          # Exploratory Data Analysis
-│   ├── 02_feature_engineering_modeling.ipynb # Feature Engineering & Model Training
-│   └── 03_mlflow_experiments.ipynb           # MLflow Experiment Tracking
+│   ├── 01_eda.ipynb               # Exploratory Data Analysis
+│   ├── 02_feature_engineering_modeling.ipynb  # Feature Engineering & Models
+│   └── 03_mlflow_experiments.ipynb    # MLflow Experiment Tracking
+├── reports/
+│   └── MLOps_Assignment_Report.md # Assignment report
 ├── scripts/
 │   ├── download_data.py           # Data download script
 │   ├── train_and_save_locally.py  # Local training script
-│   └── execute_notebooks.py       # Run all notebooks with outputs
-├── screenshots/                    # Generated visualizations
-│   ├── 01_*.png                   # EDA screenshots
-│   ├── 02_*.png                   # Model training screenshots
-│   └── 03_*.png                   # MLflow experiment screenshots
+│   └── execute_notebooks.py       # Run all notebooks
+├── screenshots/                    # Generated visualizations (20 files)
 ├── src/
-│   ├── data/                      # Data loading and preprocessing
-│   ├── features/                  # Feature engineering
-│   ├── models/                    # Model training
-│   ├── monitoring/                # Drift detection
+│   ├── data/load_data.py          # Data acquisition
+│   ├── data/preprocess.py         # Data preprocessing
+│   ├── features/feature_engineering.py  # Feature engineering
+│   ├── models/train.py            # Model training
+│   ├── flows/                     # Prefect workflows
+│   ├── tasks/                     # Modular tasks
 │   └── tracking/                  # MLflow utilities
 ├── tests/
 │   ├── unit/                      # Unit tests
 │   └── integration/               # Integration tests
-├── Dockerfile                     # Docker image definition
-├── docker-compose.yml             # Multi-container setup
-├── requirements.txt               # Python dependencies
-└── README.md                      # This file
+├── Dockerfile                      # Docker image definition
+├── docker-compose.yml              # Multi-container setup
+├── requirements.txt                # Python dependencies
+├── QUICKSTART.md                   # Quick start guide
+└── README.md                       # This file
 ```
 
 ---
