@@ -5,8 +5,9 @@ FastAPI application for serving heart disease predictions.
 Includes health checks, prediction endpoint, and monitoring.
 """
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 import joblib
 import numpy as np
 import logging
@@ -14,6 +15,53 @@ import os
 from datetime import datetime
 from typing import Optional
 import json
+
+
+# Pydantic model for JSON input
+class PredictionRequest(BaseModel):
+    """Request model for heart disease prediction with JSON input."""
+    age: int = Field(..., ge=0, le=120, description="Age in years")
+    sex: int = Field(..., ge=0, le=1, description="Sex (1=male, 0=female)")
+    cp: int = Field(..., ge=0, le=3, description="Chest pain type (0-3)")
+    trestbps: int = Field(..., ge=0, le=300, description="Resting blood pressure")
+    chol: int = Field(..., ge=0, le=600, description="Serum cholesterol in mg/dl")
+    fbs: int = Field(..., ge=0, le=1, description="Fasting blood sugar > 120 mg/dl")
+    restecg: int = Field(..., ge=0, le=2, description="Resting ECG results (0-2)")
+    thalach: int = Field(..., ge=0, le=250, description="Maximum heart rate achieved")
+    exang: int = Field(..., ge=0, le=1, description="Exercise induced angina")
+    oldpeak: float = Field(..., ge=0, le=10, description="ST depression induced by exercise")
+    slope: int = Field(..., ge=0, le=2, description="Slope of peak exercise ST segment")
+    ca: int = Field(..., ge=0, le=4, description="Number of major vessels colored by fluoroscopy")
+    thal: int = Field(..., ge=0, le=3, description="Thalassemia (0=normal, 1=fixed defect, 2=reversible defect)")
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "age": 63,
+                "sex": 1,
+                "cp": 3,
+                "trestbps": 145,
+                "chol": 233,
+                "fbs": 1,
+                "restecg": 0,
+                "thalach": 150,
+                "exang": 0,
+                "oldpeak": 2.3,
+                "slope": 0,
+                "ca": 0,
+                "thal": 1
+            }
+        }
+
+
+class PredictionResponse(BaseModel):
+    """Response model for heart disease prediction."""
+    prediction: int = Field(..., description="0 = No disease, 1 = Disease present")
+    confidence: float = Field(..., description="Probability score (0-1)")
+    risk_level: str = Field(..., description="Low, Medium, or High")
+    probability_no_disease: float = Field(..., description="Probability of no heart disease")
+    probability_disease: float = Field(..., description="Probability of heart disease")
+    processing_time_ms: float = Field(..., description="Processing time in milliseconds")
 
 # Setup logging
 log_dir = 'logs'
@@ -148,29 +196,34 @@ def model_info():
     return {"error": "Model metadata not available"}
 
 
-@app.post("/predict")
-def predict(
-    age: int = Query(..., ge=0, le=120, description="Age in years"),
-    sex: int = Query(..., ge=0, le=1, description="Sex (1=male, 0=female)"),
-    cp: int = Query(..., ge=0, le=3, description="Chest pain type (0-3)"),
-    trestbps: int = Query(..., ge=0, le=300, description="Resting blood pressure"),
-    chol: int = Query(..., ge=0, le=600, description="Serum cholesterol"),
-    fbs: int = Query(..., ge=0, le=1, description="Fasting blood sugar > 120"),
-    restecg: int = Query(..., ge=0, le=2, description="Resting ECG results"),
-    thalach: int = Query(..., ge=0, le=250, description="Max heart rate"),
-    exang: int = Query(..., ge=0, le=1, description="Exercise induced angina"),
-    oldpeak: float = Query(..., ge=0, le=10, description="ST depression"),
-    slope: int = Query(..., ge=0, le=2, description="ST segment slope"),
-    ca: int = Query(..., ge=0, le=4, description="Major vessels colored"),
-    thal: int = Query(..., ge=0, le=3, description="Thalassemia type")
-):
+@app.post("/predict", response_model=PredictionResponse)
+def predict(request: PredictionRequest):
     """
     Make a heart disease prediction.
     
-    Returns:
-        prediction: 0 (no disease) or 1 (disease present)
-        confidence: Probability score (0-1)
-        risk_level: Low, Medium, or High
+    Accepts JSON input with patient health data and returns:
+    - prediction: 0 (no disease) or 1 (disease present)
+    - confidence: Probability score (0-1)
+    - risk_level: Low, Medium, or High
+    
+    Example JSON input:
+    ```json
+    {
+        "age": 63,
+        "sex": 1,
+        "cp": 3,
+        "trestbps": 145,
+        "chol": 233,
+        "fbs": 1,
+        "restecg": 0,
+        "thalach": 150,
+        "exang": 0,
+        "oldpeak": 2.3,
+        "slope": 0,
+        "ca": 0,
+        "thal": 1
+    }
+    ```
     """
     start_time = datetime.now()
     
@@ -180,9 +233,12 @@ def predict(
         raise HTTPException(status_code=503, detail="Model not loaded")
     
     try:
-        # Create feature array
-        features = np.array([[age, sex, cp, trestbps, chol, fbs, restecg,
-                              thalach, exang, oldpeak, slope, ca, thal]])
+        # Create feature array from JSON input
+        features = np.array([[
+            request.age, request.sex, request.cp, request.trestbps,
+            request.chol, request.fbs, request.restecg, request.thalach,
+            request.exang, request.oldpeak, request.slope, request.ca, request.thal
+        ]])
         
         # Apply preprocessing if available
         if preprocessor is not None:

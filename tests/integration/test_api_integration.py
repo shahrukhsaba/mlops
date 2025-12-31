@@ -55,11 +55,11 @@ class TestPredictionEndpoint:
         }
 
     def test_predict_returns_200(self, valid_params):
-        """Test that predict endpoint returns 200 with valid input."""
+        """Test that predict endpoint returns 200 with valid JSON input."""
         try:
             response = requests.post(
                 f"{API_BASE_URL}/predict",
-                params=valid_params,
+                json=valid_params,
                 timeout=30
             )
             assert response.status_code == 200
@@ -71,7 +71,7 @@ class TestPredictionEndpoint:
         try:
             response = requests.post(
                 f"{API_BASE_URL}/predict",
-                params=valid_params,
+                json=valid_params,
                 timeout=30
             )
             data = response.json()
@@ -85,7 +85,7 @@ class TestPredictionEndpoint:
         try:
             response = requests.post(
                 f"{API_BASE_URL}/predict",
-                params=valid_params,
+                json=valid_params,
                 timeout=30
             )
             data = response.json()
@@ -95,8 +95,8 @@ class TestPredictionEndpoint:
             pytest.skip("API server not running")
 
     def test_predict_high_risk_patient(self):
-        """Test prediction for high-risk patient profile."""
-        high_risk_params = {
+        """Test prediction for high-risk patient profile with JSON input."""
+        high_risk_data = {
             "age": 70,
             "sex": 1,
             "cp": 3,
@@ -114,7 +114,7 @@ class TestPredictionEndpoint:
         try:
             response = requests.post(
                 f"{API_BASE_URL}/predict",
-                params=high_risk_params,
+                json=high_risk_data,
                 timeout=30
             )
             assert response.status_code == 200
@@ -124,8 +124,8 @@ class TestPredictionEndpoint:
             pytest.skip("API server not running")
 
     def test_predict_low_risk_patient(self):
-        """Test prediction for low-risk patient profile."""
-        low_risk_params = {
+        """Test prediction for low-risk patient profile with JSON input."""
+        low_risk_data = {
             "age": 35,
             "sex": 0,
             "cp": 0,
@@ -143,7 +143,7 @@ class TestPredictionEndpoint:
         try:
             response = requests.post(
                 f"{API_BASE_URL}/predict",
-                params=low_risk_params,
+                json=low_risk_data,
                 timeout=30
             )
             assert response.status_code == 200
@@ -169,8 +169,8 @@ class TestAPIResponseTime:
             pytest.skip("API server not running")
 
     def test_predict_response_time(self):
-        """Test predict endpoint responds within 5 seconds."""
-        params = {
+        """Test predict endpoint responds within 5 seconds with JSON input."""
+        data = {
             "age": 63, "sex": 1, "cp": 3, "trestbps": 145,
             "chol": 233, "fbs": 1, "restecg": 0, "thalach": 150,
             "exang": 0, "oldpeak": 2.3, "slope": 0, "ca": 0, "thal": 1
@@ -179,7 +179,7 @@ class TestAPIResponseTime:
             start = time.time()
             response = requests.post(
                 f"{API_BASE_URL}/predict",
-                params=params,
+                json=data,
                 timeout=30
             )
             duration = time.time() - start
@@ -194,16 +194,16 @@ class TestErrorHandling:
     """Tests for API error handling."""
 
     def test_missing_parameters_handled(self):
-        """Test that missing parameters are handled gracefully."""
+        """Test that missing JSON fields are handled gracefully."""
         try:
-            # Only provide some parameters
-            partial_params = {"age": 63, "sex": 1}
+            # Only provide some parameters (incomplete JSON body)
+            partial_data = {"age": 63, "sex": 1}
             response = requests.post(
                 f"{API_BASE_URL}/predict",
-                params=partial_params,
+                json=partial_data,
                 timeout=30
             )
-            # Should return error (422 or similar)
+            # Should return error (422 for validation error)
             assert response.status_code in [400, 422]
         except requests.exceptions.ConnectionError:
             pytest.skip("API server not running")
