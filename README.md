@@ -122,6 +122,7 @@ open http://localhost:8000/docs
 |------------|-----|--------|
 | Docker (local) | http://localhost:8000 | ✅ Working |
 | Kubernetes (local) | http://localhost:80 | ✅ Working |
+| **Render (cloud)** | https://heart-disease-api.onrender.com | 🚀 [Deploy Guide](QUICKSTART.md#deploy-to-cloud-rendercom---free) |
 
 ---
 

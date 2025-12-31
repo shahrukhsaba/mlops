@@ -274,6 +274,76 @@ Error: Cannot connect to the Docker daemon
 
 ---
 
+---
+
+## Deploy to Cloud (Render.com) - FREE
+
+Deploy your API to the cloud with a public URL!
+
+### Step 1: Create Render Account
+
+1. Go to [render.com](https://render.com)
+2. Sign up with **GitHub** (recommended)
+3. Authorize Render to access your repositories
+
+### Step 2: Deploy from GitHub
+
+**Option A: One-Click Deploy (Blueprint)**
+
+1. Go to [Render Dashboard](https://dashboard.render.com)
+2. Click **New** → **Blueprint**
+3. Connect your GitHub repo: `shahrukhsaba/mlops`
+4. Render will detect `render.yaml` and deploy automatically
+
+**Option B: Manual Deploy**
+
+1. Go to [Render Dashboard](https://dashboard.render.com)
+2. Click **New** → **Web Service**
+3. Connect GitHub repo: `shahrukhsaba/mlops`
+4. Configure:
+   - **Name**: `heart-disease-api`
+   - **Environment**: `Docker`
+   - **Plan**: `Free`
+   - **Health Check Path**: `/health`
+5. Click **Create Web Service**
+
+### Step 3: Wait for Deployment
+
+- Build takes ~5-10 minutes on first deploy
+- Check build logs in Render dashboard
+- Once deployed, you'll get a URL like:
+  ```
+  https://heart-disease-api.onrender.com
+  ```
+
+### Step 4: Test Your Live API
+
+```bash
+# Health check
+curl https://heart-disease-api.onrender.com/health
+
+# Make prediction
+curl -X POST https://heart-disease-api.onrender.com/predict \
+  -H "Content-Type: application/json" \
+  -d '{"age":63,"sex":1,"cp":3,"trestbps":145,"chol":233,"fbs":1,"restecg":0,"thalach":150,"exang":0,"oldpeak":2.3,"slope":0,"ca":0,"thal":1}'
+
+# View docs
+open https://heart-disease-api.onrender.com/docs
+```
+
+### Render Free Tier Notes
+
+| Feature | Limit |
+|---------|-------|
+| **Compute** | 750 hours/month |
+| **Sleep** | Spins down after 15 min inactivity |
+| **Wake up** | ~30 seconds on first request |
+| **Bandwidth** | 100 GB/month |
+
+> **Note**: Free tier services sleep after inactivity. First request may take ~30s to wake up.
+
+---
+
 ## Next Steps
 
 - [Full README](README.md) - Complete project documentation
