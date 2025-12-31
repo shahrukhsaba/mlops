@@ -1,0 +1,35 @@
+========================================================================
+     API REQUEST LOGGING
+========================================================================
+Container Logs (last 30 lines):
+
+/usr/local/lib/python3.10/site-packages/sklearn/base.py:442: InconsistentVersionWarning: Trying to unpickle estimator DecisionTreeClassifier from version 1.8.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/usr/local/lib/python3.10/site-packages/sklearn/base.py:442: InconsistentVersionWarning: Trying to unpickle estimator RandomForestClassifier from version 1.8.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+2025-12-31 00:30:04,420 - INFO - Model loaded from models/production/model.pkl
+/usr/local/lib/python3.10/site-packages/sklearn/base.py:442: InconsistentVersionWarning: Trying to unpickle estimator StandardScaler from version 1.8.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/usr/local/lib/python3.10/site-packages/sklearn/base.py:442: InconsistentVersionWarning: Trying to unpickle estimator OneHotEncoder from version 1.8.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+/usr/local/lib/python3.10/site-packages/sklearn/base.py:442: InconsistentVersionWarning: Trying to unpickle estimator ColumnTransformer from version 1.8.0 when using version 1.7.2. This might lead to breaking code or invalid results. Use at your own risk. For more info please refer to:
+https://scikit-learn.org/stable/model_persistence.html#security-maintainability-limitations
+  warnings.warn(
+2025-12-31 00:30:04,421 - INFO - Preprocessor loaded from models/production/preprocessor.pkl
+2025-12-31 00:30:04,421 - INFO - Model metadata loaded
+2025-12-31 00:30:04,421 - INFO - API startup complete - model loaded successfully
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:40438 - "GET /health HTTP/1.1" 200 OK
+2025-12-31 00:30:08,509 - INFO - Prediction: 0, Confidence: 0.274, Risk: Low, Duration: 0.012s
+INFO:     192.168.65.1:20325 - "POST /predict HTTP/1.1" 200 OK
+2025-12-31 00:30:08,541 - INFO - Prediction: 0, Confidence: 0.099, Risk: Low, Duration: 0.011s
+INFO:     192.168.65.1:38950 - "POST /predict HTTP/1.1" 200 OK
+2025-12-31 00:30:08,571 - INFO - Prediction: 1, Confidence: 0.785, Risk: High, Duration: 0.011s
+INFO:     192.168.65.1:40374 - "POST /predict HTTP/1.1" 200 OK
+INFO:     192.168.65.1:37867 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     192.168.65.1:23519 - "GET /metrics HTTP/1.1" 200 OK

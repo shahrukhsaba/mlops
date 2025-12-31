@@ -102,6 +102,13 @@ preprocessor = None
 model_metadata = None
 startup_time = datetime.now()
 
+# Metrics counters
+prediction_count = 0
+prediction_success = 0
+prediction_errors = 0
+predictions_by_class = {0: 0, 1: 0}
+total_latency_ms = 0.0
+
 # Feature names expected by the model
 FEATURE_NAMES = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 
                  'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal']
@@ -268,6 +275,14 @@ def predict(request: PredictionRequest):
         
         # Calculate response time
         duration = (datetime.now() - start_time).total_seconds()
+        duration_ms = duration * 1000
+        
+        # Update metrics
+        global prediction_count, prediction_success, total_latency_ms, predictions_by_class
+        prediction_count += 1
+        prediction_success += 1
+        total_latency_ms += duration_ms
+        predictions_by_class[prediction] = predictions_by_class.get(prediction, 0) + 1
         
         # Log prediction
         logger.info(
@@ -281,10 +296,12 @@ def predict(request: PredictionRequest):
             "risk_level": risk_level,
             "probability_no_disease": round(1 - confidence, 4),
             "probability_disease": round(confidence, 4),
-            "processing_time_ms": round(duration * 1000, 2)
+            "processing_time_ms": round(duration_ms, 2)
         }
         
     except Exception as e:
+        global prediction_errors
+        prediction_errors += 1
         logger.error(f"Prediction error: {e}")
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
@@ -293,9 +310,12 @@ def predict(request: PredictionRequest):
 def metrics():
     """
     Prometheus-style metrics endpoint.
-    Returns basic application metrics.
+    Returns comprehensive application metrics for monitoring.
     """
+    from fastapi.responses import PlainTextResponse
+    
     uptime = (datetime.now() - startup_time).total_seconds()
+    avg_latency = total_latency_ms / prediction_count if prediction_count > 0 else 0
     
     metrics_text = f"""# HELP app_info Application information
 # TYPE app_info gauge
@@ -308,9 +328,33 @@ app_uptime_seconds {uptime}
 # HELP model_loaded Whether the model is loaded
 # TYPE model_loaded gauge
 model_loaded {1 if model else 0}
+
+# HELP predictions_total Total number of predictions made
+# TYPE predictions_total counter
+predictions_total {prediction_count}
+
+# HELP predictions_success_total Successful predictions
+# TYPE predictions_success_total counter
+predictions_success_total {prediction_success}
+
+# HELP predictions_errors_total Failed predictions
+# TYPE predictions_errors_total counter
+predictions_errors_total {prediction_errors}
+
+# HELP predictions_by_class Predictions by class (0=no disease, 1=disease)
+# TYPE predictions_by_class counter
+predictions_by_class{{class="0"}} {predictions_by_class.get(0, 0)}
+predictions_by_class{{class="1"}} {predictions_by_class.get(1, 0)}
+
+# HELP prediction_latency_avg_ms Average prediction latency in milliseconds
+# TYPE prediction_latency_avg_ms gauge
+prediction_latency_avg_ms {avg_latency:.2f}
+
+# HELP prediction_latency_total_ms Total prediction latency in milliseconds
+# TYPE prediction_latency_total_ms counter
+prediction_latency_total_ms {total_latency_ms:.2f}
 """
     
-    from fastapi.responses import PlainTextResponse
     return PlainTextResponse(content=metrics_text, media_type="text/plain")
 
 

@@ -1,0 +1,41 @@
+========================================================================
+     API PROMETHEUS METRICS
+========================================================================
+Endpoint: http://localhost:8000/metrics
+
+# HELP app_info Application information
+# TYPE app_info gauge
+app_info{version="1.0.0",model_loaded="True"} 1
+
+# HELP app_uptime_seconds Application uptime in seconds
+# TYPE app_uptime_seconds gauge
+app_uptime_seconds 10.689813
+
+# HELP model_loaded Whether the model is loaded
+# TYPE model_loaded gauge
+model_loaded 1
+
+# HELP predictions_total Total number of predictions made
+# TYPE predictions_total counter
+predictions_total 3
+
+# HELP predictions_success_total Successful predictions
+# TYPE predictions_success_total counter
+predictions_success_total 3
+
+# HELP predictions_errors_total Failed predictions
+# TYPE predictions_errors_total counter
+predictions_errors_total 0
+
+# HELP predictions_by_class Predictions by class (0=no disease, 1=disease)
+# TYPE predictions_by_class counter
+predictions_by_class{class="0"} 2
+predictions_by_class{class="1"} 1
+
+# HELP prediction_latency_avg_ms Average prediction latency in milliseconds
+# TYPE prediction_latency_avg_ms gauge
+prediction_latency_avg_ms 11.21
+
+# HELP prediction_latency_total_ms Total prediction latency in milliseconds
+# TYPE prediction_latency_total_ms counter
+prediction_latency_total_ms 33.64

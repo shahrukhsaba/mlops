@@ -64,7 +64,7 @@ open http://localhost:8000/docs
 - [Model Containerization (Step 6)](#-model-containerization-step-6)
 - [Production Deployment (Step 7)](#-production-deployment-step-7)
 - [CI/CD Pipeline](#-cicd-pipeline)
-- [Monitoring](#-monitoring)
+- [Monitoring & Logging (Step 8)](#-monitoring--logging-step-8)
 - [Testing](#-testing)
 - [MLflow Experiment Tracking](#-mlflow-experiment-tracking)
 
@@ -766,32 +766,111 @@ Check the [Actions tab](https://github.com/shahrukhsaba/mlops/actions) in the Gi
 
 ---
 
-## 📊 Monitoring
+## 📊 Monitoring & Logging (Step 8)
 
-### Prometheus Metrics
+This section covers Step 8 of the assignment: *"Integrate logging of API requests. Demonstrate simple monitoring (Prometheus + Grafana or API metrics/logs dashboard)"*.
 
-The API exposes metrics at `/metrics`:
+### 1. API Request Logging
 
-- `predictions_total`: Total predictions by class
-- `prediction_confidence`: Confidence score distribution
-- `prediction_latency_seconds`: Prediction latency
-- `api_requests_total`: Total API requests
+All API requests are logged with structured logging:
+
+```python
+# Example log output
+2025-12-31 00:30:08 - INFO - Prediction: 0, Confidence: 0.274, Risk: Low, Duration: 0.012s
+2025-12-31 00:30:08 - INFO - Prediction: 1, Confidence: 0.785, Risk: High, Duration: 0.011s
+```
+
+**Logging features:**
+- File logging: `logs/api.log`
+- Console logging: stdout (visible in `docker logs`)
+- Structured format: timestamp, level, message
+- Request details: prediction, confidence, risk level, duration
+
+### 2. Prometheus Metrics
+
+The API exposes comprehensive metrics at `/metrics`:
+
+```bash
+curl http://localhost:8000/metrics
+```
+
+| Metric | Type | Description |
+|--------|------|-------------|
+| `app_info` | gauge | Application version and model status |
+| `app_uptime_seconds` | gauge | API uptime in seconds |
+| `model_loaded` | gauge | Model loading status (0/1) |
+| `predictions_total` | counter | Total number of predictions |
+| `predictions_success_total` | counter | Successful predictions |
+| `predictions_errors_total` | counter | Failed predictions |
+| `predictions_by_class{class="0"}` | counter | Predictions: No disease |
+| `predictions_by_class{class="1"}` | counter | Predictions: Disease |
+| `prediction_latency_avg_ms` | gauge | Average latency (ms) |
+| `prediction_latency_total_ms` | counter | Total latency (ms) |
+
+### 3. Monitoring Stack (Prometheus + Grafana)
+
+```
+monitoring/
+├── docker-compose-monitoring.yml   # Full monitoring stack
+├── prometheus/
+│   └── prometheus.yml              # Prometheus scrape config
+└── grafana/
+    ├── dashboards/
+    │   ├── dashboards.yml          # Dashboard provisioning
+    │   └── heart-disease-api.json  # Pre-built dashboard
+    └── datasources/
+        └── prometheus.yml          # Prometheus datasource
+```
 
 ### Start Monitoring Stack
 
 ```bash
+# Build API image first (if not already built)
+docker build -t heart-disease-api:latest .
+
+# Start Prometheus + Grafana + API
 cd monitoring
 docker-compose -f docker-compose-monitoring.yml up -d
 ```
 
 ### Access Dashboards
 
-- Prometheus: http://localhost:9090
-- Grafana: http://localhost:3000
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| **API** | http://localhost:8000 | - |
+| **Prometheus** | http://localhost:9090 | - |
+| **Grafana** | http://localhost:3000 | admin / admin |
 
-### Logs
+### Grafana Dashboard Features
 
-API logs are written to `logs/api.log`.
+The pre-built dashboard (`heart-disease-api.json`) includes:
+
+- **Total Predictions** - Counter stat panel
+- **Average Latency** - Latency gauge with thresholds
+- **Model Status** - Loaded/Not loaded indicator
+- **Uptime** - Application uptime
+- **Predictions by Class** - Pie chart (Disease vs No Disease)
+- **Prediction Counts Over Time** - Time series graph
+
+### View Container Logs
+
+```bash
+# Docker container logs
+docker logs heart-disease-api --tail=50
+
+# Kubernetes pod logs
+kubectl logs -l app=heart-disease-api --tail=50
+```
+
+### Monitoring Screenshots
+
+See the `screenshots/` folder:
+
+| Screenshot | Description |
+|------------|-------------|
+| `08_api_metrics.txt` | Prometheus metrics output |
+| `08_api_logs.txt` | API request logs |
+| `08_monitoring_stack.txt` | Monitoring stack configuration |
 
 ---
 

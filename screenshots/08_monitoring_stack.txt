@@ -1,0 +1,47 @@
+========================================================================
+     MONITORING STACK CONFIGURATION
+========================================================================
+
+=== Files in monitoring/ ===
+monitoring/docker-compose-monitoring.yml
+monitoring/grafana/datasources/prometheus.yml
+monitoring/grafana/dashboards/dashboards.yml
+monitoring/grafana/dashboards/heart-disease-api.json
+monitoring/prometheus/prometheus.yml
+
+=== Prometheus Configuration ===
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'heart-disease-api'
+    static_configs:
+      - targets: ['api:8000']  # Docker service name
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+=== Grafana Datasource ===
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    uid: prometheus
+    editable: true
+
+
+=== Docker Compose Services ===
+  api:
+    container_name: heart-disease-api-monitored
+    ports:
+  prometheus:
+    container_name: prometheus
+    ports:
+  grafana:
+    container_name: grafana
+    ports:
+  monitoring:
