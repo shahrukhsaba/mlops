@@ -92,6 +92,8 @@ open http://localhost:8000/docs
 - [Generated Screenshots](#-generated-screenshots)
 - [Model Performance](#-model-performance)
 - [Full Assignment Report](reports/MLOps_Assignment_Report.md)
+- [API Documentation](docs/API.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
 
 ---
 
