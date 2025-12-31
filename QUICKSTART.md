@@ -4,6 +4,46 @@ This guide provides step-by-step instructions to clone and run the Heart Disease
 
 ---
 
+## 🔗 Important Links (Quick Reference)
+
+### Live API (Render - Cloud)
+| Page | URL |
+|------|-----|
+| 🏠 **API Home** | https://heart-disease-api-sdgp.onrender.com |
+| ❤️ **Health Check** | https://heart-disease-api-sdgp.onrender.com/health |
+| 📖 **Swagger Docs** | https://heart-disease-api-sdgp.onrender.com/docs |
+| 🔮 **Predict Endpoint** | https://heart-disease-api-sdgp.onrender.com/predict |
+| 📊 **Metrics** | https://heart-disease-api-sdgp.onrender.com/metrics |
+
+### Local Docker Deployment (Port 8000)
+| Page | URL |
+|------|-----|
+| 🏠 **API Home** | http://localhost:8000 |
+| ❤️ **Health Check** | http://localhost:8000/health |
+| 📖 **Swagger Docs** | http://localhost:8000/docs |
+| 🔮 **Predict Endpoint** | http://localhost:8000/predict |
+| 📊 **Metrics** | http://localhost:8000/metrics |
+
+### Local Kubernetes Deployment (Port 80)
+| Page | URL |
+|------|-----|
+| 🏠 **API Home** | http://localhost:80 |
+| ❤️ **Health Check** | http://localhost:80/health |
+| 📖 **Swagger Docs** | http://localhost:80/docs |
+| 🔮 **Predict Endpoint** | http://localhost:80/predict |
+| 📊 **Metrics** | http://localhost:80/metrics |
+
+### Monitoring Stack (Local Only)
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| 📈 **Grafana Dashboard** | http://localhost:3000 | admin / admin |
+| 🔍 **Prometheus** | http://localhost:9090 | - |
+| 📋 **MLflow UI** | http://localhost:5000 | - |
+
+> ⚠️ **Note**: Grafana and Prometheus are only available in **local deployment**. Start with: `cd monitoring && docker-compose -f docker-compose-monitoring.yml up -d`
+
+---
+
 ## Prerequisites
 
 | Requirement | Version | Installation | Required For |
