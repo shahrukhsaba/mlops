@@ -585,26 +585,45 @@ This section covers Step 7 of the assignment: *"Deploy the Dockerized API to a p
 | **Minikube** | Local K8s for development | ✅ Supported |
 | **GKE/EKS/AKS** | Cloud Kubernetes | ✅ Manifests ready |
 
-### Kubernetes Manifests
+### Kubernetes Manifests (in `k8s/` folder)
 
-| File | Description |
-|------|-------------|
-| `k8s/namespace.yaml` | Namespace definition |
-| `k8s/configmap.yaml` | Application configuration |
-| `k8s/deployment.yaml` | Deployment + Service + HPA |
-| `k8s/ingress.yaml` | Ingress rules (optional) |
+The project uses **deployment manifests** (standard Kubernetes YAML) instead of Helm charts:
+
+```
+k8s/
+├── deployment.yaml    # Deployment + Service (LoadBalancer) + HPA
+├── configmap.yaml     # Application configuration
+├── ingress.yaml       # Ingress rules (optional, for domain routing)
+└── namespace.yaml     # Namespace definition
+```
+
+| File | Resources | Description |
+|------|-----------|-------------|
+| `k8s/deployment.yaml` | Deployment, Service, HPA | Main deployment with LoadBalancer service and auto-scaling |
+| `k8s/configmap.yaml` | ConfigMap | Application configuration (paths, ports, settings) |
+| `k8s/ingress.yaml` | Ingress | Optional domain-based routing rules |
+| `k8s/namespace.yaml` | Namespace | Isolated namespace for the application |
+
+### Resources in `deployment.yaml`
+
+| Resource | API Version | Purpose |
+|----------|-------------|---------|
+| **Deployment** | apps/v1 | Manages 2 replicas with rolling updates |
+| **Service** | v1 (LoadBalancer) | Exposes API on port 80 → container 8000 |
+| **HorizontalPodAutoscaler** | autoscaling/v2 | Auto-scales pods based on CPU/memory |
 
 ### Deployment Features
 
 | Feature | Configuration |
 |---------|---------------|
 | **Replicas** | 2 pods (min), 5 pods (max with HPA) |
-| **Service Type** | LoadBalancer (exposed on port 80) |
+| **Service Type** | **LoadBalancer** (exposed on `localhost:80`) |
 | **Health Checks** | Liveness & Readiness probes on `/health` |
 | **Auto-scaling** | HPA based on CPU (70%) and Memory (80%) |
 | **Resources** | 256Mi-512Mi memory, 250m-500m CPU |
 | **Rolling Updates** | Zero-downtime deployments |
 | **Prometheus** | Metrics scraping annotations |
+| **Environment** | `ENV=production`, `LOG_LEVEL=INFO` |
 
 ### Deploy to Docker Desktop Kubernetes
 
