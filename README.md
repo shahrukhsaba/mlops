@@ -20,7 +20,7 @@
 
 A production-ready MLOps pipeline for predicting heart disease risk using the UCI Heart Disease dataset. This project demonstrates end-to-end ML model development, CI/CD, containerization, and cloud deployment.
 
-🚀 **[Quick Start Guide (Docker)](QUICKSTART.md)** | 📄 **[Full Assignment Report](reports/MLOps_Assignment_Report.md)** | 🔗 **[GitHub Repository](https://github.com/shahrukhsaba/mlops)** | 🌐 **[Public Cloud Live API (Render)](https://heart-disease-api-sdgp.onrender.com/docs)** | 📄 **[Docx Report 10 Pages](https://github.com/shahrukhsaba/mlops/blob/main/Group122MLOpsAssignment_Final_Report.docx)**
+🚀 **[Quick Start Guide (Docker)](QUICKSTART.md)** | 📄 **[Full Assignment Report](reports/MLOps_Assignment_Report.md)** | 🔗 **[GitHub Repository](https://github.com/shahrukhsaba/mlops)** | 🌐 **[Public Cloud Live API (Render)](https://heart-disease-api-sdgp.onrender.com/docs)** | 📄 **[Docx Report 10 Pages](https://github.com/shahrukhsaba/mlops/blob/main/Group122MLOpsAssignment_Final_Report.docx)** | | 📽️ **[RECORDING](https://github.com/shahrukhsaba/mlops/blob/main/Group122MLOpsAssignment_Final_Report.docx](https://drive.google.com/drive/folders/17qrRT0QezAUvVVMRw8H1iZ1bIGe1cAlU?usp=sharing))**
 ---
 
 ## 📊 Assignment Tasks Completion Summary
@@ -1124,6 +1124,7 @@ Running `python scripts/execute_notebooks.py` generates all notebook screenshots
 
 - UCI Machine Learning Repository for the Heart Disease dataset
 - BITS Pilani for the MLOps course
+
 
 
 
